@@ -1,28 +1,20 @@
-# Этап 1: Установка зависимостей для разработки
-FROM node:18-alpine3.17 as builder
+# Используйте базовый образ Node.js
+FROM node:14
 
+# Установите рабочую директорию внутри контейнера
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+# Скопируйте package.json и package-lock.json для установки зависимостей
+COPY package*.json ./
 
+# Установите зависимости
 RUN npm install --legacy-peer-deps
 
-# Этап 2: Копирование и настройка переменных окружения
-FROM node:14 as runner
-
-WORKDIR /app
-
-COPY --from=builder /app/node_modules ./node_modules
+# Скопируйте остальные файлы проекта
 COPY . .
 
-# Задайте переменные окружения для продакшн среды
-#ENV NODE_ENV=production
-#ENV DATABASE_HOST=postgres-service
-#ENV DATABASE_PORT=5432
-#ENV DATABASE_USERNAME=myuser
-#ENV DATABASE_PASSWORD=admin
-#ENV DATABASE_DB=mydb
-
+# Откройте порт 3000, который будет использоваться приложением Nest.js
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Команда запуска приложения
+CMD ["npm", "run", "start:prod"]
