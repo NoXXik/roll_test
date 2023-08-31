@@ -54,7 +54,6 @@ export const Navbar = memo(({className}: NavbarProps) => {
                 className={cls.links}
                 onClick={() => navigate('/login')}
             >
-                Войти
             </Button>
         </header>
     );
