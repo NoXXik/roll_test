@@ -1,20 +1,21 @@
-# Используйте базовый образ Node.js
-FROM node:14
+FROM node:18
 
-# Установите рабочую директорию внутри контейнера
-WORKDIR /app
+# Create app directory
+WORKDIR /usr/src/app
 
-# Скопируйте package.json и package-lock.json для установки зависимостей
+# Copy both package.json and package-lock.json if exists
 COPY package*.json ./
 
-# Установите зависимости
-RUN npm install --legacy-peer-deps
+RUN npm install
 
-# Скопируйте остальные файлы проекта
+# Copy your local folder excluding the file in dockerignore
 COPY . .
 
-# Откройте порт 3000, который будет использоваться приложением Nest.js
+# Expose the docker internal port where the app is running
 EXPOSE 3000
 
-# Команда запуска приложения
-CMD ["npm", "run", "start:prod"]
+# build
+RUN npm run build
+
+#run node dist/main.js
+CMD [ "node", "dist/main.js" ]
