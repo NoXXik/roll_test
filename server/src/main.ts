@@ -9,7 +9,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
   // Настройка CORS
   app.enableCors({
-    origin: 'http://localhost:5173', // Замените на домен вашего React-приложения
+    origin: configService.get('CLIENT_URL'), // Замените на домен вашего React-приложения
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin', // Добавьте другие разрешенные заголовки, если требуется
     credentials: true, // Если в вашем приложении используются куки или аутентификация с помощью заголовка Authorization
