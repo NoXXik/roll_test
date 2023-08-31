@@ -1,0 +1,46 @@
+version: '3'
+services:
+  nginx:
+    build: ./nginx
+    depends_on:
+      - nestjs
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+  postgres:
+    container_name: pg_db
+    restart: always
+    image: postgres:15.2-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PSWD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../postgres_data:/var/lib/postgresql/data
+  nestjs:
+    container_name: nestjs
+    restart: always
+    depends_on:
+      - postgres
+    build: ./server
+    ports:
+      - "3000:3000"
+  client:
+    container_name: client
+    restart: always
+    build: ./client
+    ports:
+      - "3030:3000"
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_LOGIN}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PSWD}
+    ports:
+      - "5050:80"
+volumes:
+  postgres-data:
