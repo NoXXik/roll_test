@@ -1,20 +1,16 @@
-# Используйте официальный образ Node.js как базовый образ
-FROM node:14
+FROM node:12.13-alpine
 
-# Установите рабочую директорию внутри контейнера
-WORKDIR /app
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
-# Скопируйте файлы package.json и package-lock.json в рабочую директорию
+WORKDIR /usr/src/app
+
 COPY package*.json ./
 
-# Установите зависимости
-RUN npm install
+RUN npm install --legacy-peer-deps
 
-# Скопируйте остальные файлы проекта в рабочую директорию
 COPY . .
 
-# Откройте порт, который используется вашим NestJS приложением
-EXPOSE 3000
+COPY --from=development /usr/src/app/dist ./dist
 
-# Запустите приложение при старте контейнера
-CMD [ "npm", "run", "start:prod" ]
+CMD ["node", "dist/main"]

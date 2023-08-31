@@ -13,9 +13,9 @@ services:
     restart: always
     image: postgres:15.2-alpine
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PSWD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: production
     ports:
       - "5432:5432"
     volumes:
@@ -38,8 +38,8 @@ services:
     container_name: pgadmin
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_LOGIN}
-      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PSWD}
+      PGADMIN_DEFAULT_EMAIL: ildar@mail.ru
+      PGADMIN_DEFAULT_PASSWORD: ildar
     ports:
       - "5050:80"
 volumes:
