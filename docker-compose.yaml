@@ -33,7 +33,7 @@ services:
     restart: always
     build: ./client
     ports:
-      - "80:80"
+      - "3030:80"
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
