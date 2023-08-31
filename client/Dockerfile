@@ -1,21 +1,26 @@
-# Начинаем с базового образа Node.js
-FROM node:18-alpine AS base
+# Устанавливаем зависимости в отдельный слой контейнера
+FROM node:14 as builder
 
-# Устанавливаем рабочую директорию внутри образа
 WORKDIR /app
 
-# Копируем файлы package.json и package-lock.json в рабочую директорию
-COPY package*.json ./
-# Устанавливаем переменные окружения
+# Копируем package.json и package-lock.json для установки зависимостей
+COPY package.json package-lock.json ./
 
-# Устанавливаем зависимости
+# Установка зависимостей
 RUN npm install
 
-# Копируем все остальные файлы проекта в рабочую директорию
+# Копируем исходный код приложения
 COPY . .
 
-# Собираем проект
+# Сборка React приложения с помощью Vite
 RUN npm run build
 
-# Запускаем приложение при запуске контейнера
-CMD ["node", "server.js"]
+# Второй этап остается без изменений
+FROM nginx:alpine
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Открываем порт 80 для доступа к приложению
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
