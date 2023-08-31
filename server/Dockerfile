@@ -1,30 +1,20 @@
-FROM node:12.19.0-alpine3.9 AS development
+# Используйте официальный образ Node.js как базовый образ
+FROM node:14
 
-WORKDIR /usr/src/app
+# Установите рабочую директорию внутри контейнера
+WORKDIR /app
 
+# Скопируйте файлы package.json и package-lock.json в рабочую директорию
 COPY package*.json ./
 
-RUN npm install glob rimraf
+# Установите зависимости
+RUN npm install
 
-RUN npm install --legacy-peer-dep
-
+# Скопируйте остальные файлы проекта в рабочую директорию
 COPY . .
 
-RUN npm run build
+# Откройте порт, который используется вашим NestJS приложением
+EXPOSE 3000
 
-FROM node:12.19.0-alpine3.9 as production
-
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
-
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-
-RUN npm install --only=production
-
-COPY . .
-
-COPY --from=development /usr/src/app/dist ./dist
-
-CMD ["node", "dist/main"]
+# Запустите приложение при старте контейнера
+CMD [ "npm", "run", "start:prod" ]
