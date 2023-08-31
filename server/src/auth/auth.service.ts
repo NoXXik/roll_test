@@ -34,8 +34,9 @@ export class AuthService {
             nickname: details.displayName,
             steam_id: details.steam_id,
             avatar_url: details.avatar,
-            password_hash: ''
+            password_hash: '',
         })
+        newUser.balance = 5000
         await this.usersRep.save(newUser)
         console.log('Новый пользователь Steam создан')
 
