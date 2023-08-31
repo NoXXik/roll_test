@@ -6,8 +6,8 @@ WORKDIR /usr/src/app
 # Copy both package.json and package-lock.json if exists
 COPY package*.json ./
 
-RUN npm install
-
+RUN npm install --legacy-peer-deps
+RUN npm i webpack --legacy-peer-deps
 # Copy your local folder excluding the file in dockerignore
 COPY . .
 
